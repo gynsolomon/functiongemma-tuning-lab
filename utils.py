@@ -5,7 +5,8 @@ import shutil
 from typing import Optional, List, Any
 from huggingface_hub import login
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from tools import DEFAULT_SYSTEM_MSG 
+from tools import DEFAULT_SYSTEM_MSG
+from template import FUNCTIONGEMMA_CHAT_TEMPLATE
 # Note: We do NOT import TOOLS here anymore to avoid stale data
 
 def authenticate_hf(token: Optional[str]) -> None:
@@ -25,6 +26,13 @@ def load_model_and_tokenizer(model_name: str):
             target_model = "google/gemma-2b-it" 
 
         tokenizer = AutoTokenizer.from_pretrained(target_model)
+        # Override the bundled chat template with our patched version.
+        # The original template uses `| dictsort` which sorts parameter keys
+        # alphabetically, breaking the strict ordering required by the
+        # literlm Android engine.  FUNCTIONGEMMA_CHAT_TEMPLATE replaces every
+        # `| dictsort` with `.items()` to preserve dict insertion order.
+        tokenizer.chat_template = FUNCTIONGEMMA_CHAT_TEMPLATE
+        print("Custom chat template applied (insertion-order preserving).")
         model = AutoModelForCausalLM.from_pretrained(target_model)
         print("Model loaded successfully.")
         return model, tokenizer
