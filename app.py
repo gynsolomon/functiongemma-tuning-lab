@@ -1,3 +1,7 @@
+import os
+
+os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
+
 from ui import build_interface
 
 if __name__ == "__main__":

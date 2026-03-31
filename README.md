@@ -56,6 +56,7 @@ Whether you are building an agent to query internal knowledge bases, control sma
 
 2.  **Run the Application:**
     ```bash
+    export PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0
     python app.py
     ```
 
