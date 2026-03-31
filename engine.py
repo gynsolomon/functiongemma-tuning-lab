@@ -324,13 +324,14 @@ class FunctionGemmaEngine:
             max_length=512,
             packing=False,
             num_train_epochs=epochs,
-            per_device_train_batch_size=4,
+            per_device_train_batch_size=1,
+            gradient_accumulation_steps=4,
             logging_steps=1,
             save_strategy="no",
             eval_strategy="epoch",
             learning_rate=learning_rate,
-            fp16=(torch_dtype == torch.float16),
-            bf16=(torch_dtype == torch.bfloat16),
+            fp16=False,
+            bf16=False,
             report_to="none",
             dataset_kwargs={"add_special_tokens": False, "append_concat_token": True}
         )
